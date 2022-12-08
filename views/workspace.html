@@ -554,7 +554,7 @@
 
         //insert listener about my change
         my_workspace.addChangeListener((event) => {
-            if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE
+            if (event.type === Blockly.Events.BLOCK_MOVE 
                 || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE) {
                 var workspace_my_xml = Blockly.Xml.workspaceToDom(my_workspace);
                 console.log("push data!")
@@ -578,7 +578,7 @@
         //axios로 보낼 때 내가 바꿀 수 있는 권한이
         other_workspace.addChangeListener((event)=>{
             console.log(event.type);
-            if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE
+            if (event.type === Blockly.Events.BLOCK_MOVE 
                 || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE) {
                 console.log(2);
                 var workspace_other_xml = Blockly.Xml.workspaceToDom(other_workspace);
@@ -802,7 +802,7 @@
                 //
                 my_workspace.addChangeListener((event) => {
                     console.log("changed");
-                    if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE
+                    if (event.type === Blockly.Events.BLOCK_MOVE
                         || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE) {
                         var workspace_my_xml = Blockly.Xml.workspaceToDom(my_workspace);
                         console.log("push data!")
