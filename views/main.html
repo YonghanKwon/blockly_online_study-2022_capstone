@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    {% if user and user.id %}
+    <div class="user-name">{{'안녕하세요! ' + user.nick + '님'}}</div>
+    <a id="logout" href="/auth/logout" class="btn">로그아웃</a><br/>
+    <form id="workspace-form" action="/workspace/new" method="post">
+        <button id="make-workspace" type="submit" class="btn">new workspace</button>
+    </form>
+    {% else %}
+    <form id="login-form" action="/auth/login" method="post">
+        <div class="input-group">
+            <label for="email">이메일</label>
+            <input id="email" type="email" name="email" required autofocus>
+        </div>
+        <div class="input-group">
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" name="password" required>
+        </div>
+        <a id="join" href="/join" class="btn">회원가입</a>
+        <button id="login" type="submit" class="btn">로그인</button>
+    </form>
+    {% endif %}
+    {% for workspace in workspaces%}
+    <div class="workspace">
+        <div class="workspace-info">hostWorkSpaceId : {{ workspace.hostWorkSpaceId }}</div>
+        <div class="workspace-info">subWorkSpaceId : {{ workspace.subWorkSpaceId }}</div>
+        <div class="workspace-info">hostUserId : {{ workspace.hostUserId }}</div>
+        <div class="workspace-info">subUserId : {{ workspace.subUserId }}</div>
+        <a id="workspace-in" href="/workspace/{{workspace.hostWorkSpaceId}}">입장</a>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

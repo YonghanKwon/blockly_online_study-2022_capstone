@@ -1,0 +1,945 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<table width="100%" height="60%">
+    <!--button_area-->
+    <tr>
+        <td colspan=2>
+            <table width="100%">
+                <tr id="tabRow" height="1em">
+                    <td width="10%">{{workSpaceGroups[0].title}}</td>
+                    <td id=user_name style="width: 15%;">user_host</td>
+                    <td class="tabmax">
+                        <button id="trashButton" class="notext" title="...">
+                            <img src='../media/1x1.gif' class="trash icon21">
+                        </button>
+                        <button id="linkButton" class="notext" title="..." download>
+                            <img src='../media/1x1.gif' class="link icon21" herf="">
+                        </button>
+                        <button id="runButton" class="notext primary" title="...">
+                            <img src='../media/1x1.gif' class="run icon21">
+                        </button>
+                        <button id="copy_mineToOther" onclick=copy_mineToOther()>copy-></button>
+                        <button id="copy_otherToMine" onclick=copy_otherToMine()><-copy</button>
+                        <button id="lock_otherpeople" onclick=lock_workspace()> lock </button>
+                        <button id="unlock_otherpeople" onclick=unlock_workspace()>unlock</button>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!--content_area-->
+    <tr>
+        <td height="99%" width="50%" id="content_area"></td>
+        <td height="99%" width="50%" id="content_area1"></td>
+    </tr>
+</table>
+
+
+<input type="text" id="myWorkSpaceId" name="myWorkSpaceId" value="{{ myWorkSpace.id }}">
+<input type="text" id="watchingWorkSpaceId" name="watchingWorkSpaceId" value="{{ hostWorkSpace.id }}">
+
+<!--tool_box xml-->
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+        <block type="logic_operation"></block>
+        <block type="logic_negate"></block>
+        <block type="logic_boolean"></block>
+        <block type="logic_null"></block>
+        <block type="logic_ternary"></block>
+    </category>
+    <category name="%{BKY_CATLOOPS}" colour="%{BKY_LOOPS_HUE}">
+        <block type="controls_repeat_ext">
+            <value name="TIMES">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_whileUntil"></block>
+        <block type="controls_for">
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+            <value name="BY">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_forEach"></block>
+        <block type="controls_flow_statements"></block>
+    </category>
+    <category name="%{BKY_CATMATH}" colour="%{BKY_MATH_HUE}">
+        <block type="math_number">
+            <field name="NUM">123</field>
+        </block>
+        <block type="math_arithmetic">
+            <value name="A">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="B">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_single">
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">9</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_trig">
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">45</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_constant"></block>
+        <block type="math_number_property">
+            <value name="NUMBER_TO_CHECK">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_round">
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">3.1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_on_list"></block>
+        <block type="math_modulo">
+            <value name="DIVIDEND">
+                <shadow type="math_number">
+                    <field name="NUM">64</field>
+                </shadow>
+            </value>
+            <value name="DIVISOR">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_constrain">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">50</field>
+                </shadow>
+            </value>
+            <value name="LOW">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="HIGH">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_random_int">
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_random_float"></block>
+        <block type="math_atan2">
+            <value name="X">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="Y">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+    </category>
+    <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
+        <block type="text"></block>
+        <block type="text_join"></block>
+        <block type="text_append">
+            <value name="TEXT">
+                <shadow type="text"></shadow>
+            </value>
+        </block>
+        <block type="text_length">
+            <value name="VALUE">
+                <shadow type="text">
+                    <field name="TEXT">abc</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="text_isEmpty">
+            <value name="VALUE">
+                <shadow type="text">
+                    <field name="TEXT"></field>
+                </shadow>
+            </value>
+        </block>
+        <block type="text_indexOf">
+            <value name="VALUE">
+                <block type="variables_get">
+                    <field name="VAR">{textVariable}</field>
+                </block>
+            </value>
+            <value name="FIND">
+                <shadow type="text">
+                    <field name="TEXT">abc</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="text_charAt">
+            <value name="VALUE">
+                <block type="variables_get">
+                    <field name="VAR">{textVariable}</field>
+                </block>
+            </value>
+        </block>
+        <block type="text_getSubstring">
+            <value name="STRING">
+                <block type="variables_get">
+                    <field name="VAR">{textVariable}</field>
+                </block>
+            </value>
+        </block>
+        <block type="text_changeCase">
+            <value name="TEXT">
+                <shadow type="text">
+                    <field name="TEXT">abc</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="text_trim">
+            <value name="TEXT">
+                <shadow type="text">
+                    <field name="TEXT">abc</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="text_print">
+            <value name="TEXT">
+                <shadow type="text">
+                    <field name="TEXT">abc</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="text_prompt_ext">
+            <value name="TEXT">
+                <shadow type="text">
+                    <field name="TEXT">abc</field>
+                </shadow>
+            </value>
+        </block>
+    </category>
+    <category name="%{BKY_CATLISTS}" colour="%{BKY_LISTS_HUE}">
+        <block type="lists_create_with">
+            <mutation items="0"></mutation>
+        </block>
+        <block type="lists_create_with"></block>
+        <block type="lists_repeat">
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">5</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="lists_length"></block>
+        <block type="lists_isEmpty"></block>
+        <block type="lists_indexOf">
+            <value name="VALUE">
+                <block type="variables_get">
+                    <field name="VAR">{listVariable}</field>
+                </block>
+            </value>
+        </block>
+        <block type="lists_getIndex">
+            <value name="VALUE">
+                <block type="variables_get">
+                    <field name="VAR">{listVariable}</field>
+                </block>
+            </value>
+        </block>
+        <block type="lists_setIndex">
+            <value name="LIST">
+                <block type="variables_get">
+                    <field name="VAR">{listVariable}</field>
+                </block>
+            </value>
+        </block>
+        <block type="lists_getSublist">
+            <value name="LIST">
+                <block type="variables_get">
+                    <field name="VAR">{listVariable}</field>
+                </block>
+            </value>
+        </block>
+        <block type="lists_split">
+            <value name="DELIM">
+                <shadow type="text">
+                    <field name="TEXT">,</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="lists_sort"></block>
+    </category>
+    <category name="%{BKY_CATCOLOUR}" colour="%{BKY_COLOUR_HUE}">
+        <block type="colour_picker"></block>
+        <block type="colour_random"></block>
+        <block type="colour_rgb">
+            <value name="RED">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="GREEN">
+                <shadow type="math_number">
+                    <field name="NUM">50</field>
+                </shadow>
+            </value>
+            <value name="BLUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="colour_blend">
+            <value name="COLOUR1">
+                <shadow type="colour_picker">
+                    <field name="COLOUR">#ff0000</field>
+                </shadow>
+            </value>
+            <value name="COLOUR2">
+                <shadow type="colour_picker">
+                    <field name="COLOUR">#3333ff</field>
+                </shadow>
+            </value>
+            <value name="RATIO">
+                <shadow type="math_number">
+                    <field name="NUM">0.5</field>
+                </shadow>
+            </value>
+        </block>
+    </category>
+    <sep></sep>
+    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+</xml>
+
+<div id="fake_workspace" display="none"></div>
+<!--<script src="/code.js"></script>-->
+
+<!--위: 수정 중, 아래: 원본 back 코드-->
+
+<div id="another-workspace"></div>
+
+<div id="workspace-group-list" style = "overflow:scroll; width:50%; height:200px; float:left">
+    {% for workspace in workSpaceGroups %}
+    <div class="workspace-group">
+        <!--
+        <div class="workspace-group-info">hostWorkSpaceId : {{ workspace.hostWorkSpaceId }}</div>
+        <div class="workspace-group-info">subWorkSpaceId : {{ workspace.subWorkSpaceId }}</div>
+        <div class="workspace-group-info">hostUserId : {{ workspace.hostUserId }}</div>
+        <div class="workspace-group-info">subUserId : {{ workspace.subUserId }}</div>
+        -->
+
+        <div class="workspace-group-info" id="{{workspace.subWorkSpaceId}}">User>> {{ workspace.subUserNick }}님, 방번호>> {{workspace.subWorkSpaceId}}</div>
+        <form action="{{workSpaceGroups[0].hostWorkSpaceId}}/change/watchingWorkSpaceId" class="workspace-change-form" 
+        method="post">
+                <input type="hidden" class="subWorkSpaceId" name="subWorkSpaceId" value="{{ workspace.subWorkSpaceId }}">
+                <button type="submit">선택</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<div id = "log"; style="overflow:scroll; width:50%; height:200px; float:right;">
+    <fieldset max>
+        <div id="chat-list">
+            {% for chat in chats %}
+            {% if chat.userId === 'system' %}
+            <div class="system">
+                <div>#system : {{chat.chat}}</div>
+            </div>
+            {% else %}
+            <div class="user">
+                <div>{{chat.nick}} : {{chat.chat}}</div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </fieldset>
+</div>
+
+<form action="" id="chat-form" method="post" style="float: right;">
+    <input type="text" id="chat" name="chat">
+    <button type="submit">전송</button>
+</form>
+
+<a href="/" id="exit-btn">방 나가기</a>
+
+<script>
+    const socket = io.connect('http://localhost:8002', {
+        path: '/socket.io',
+    });
+
+    // chat
+    const log = document.getElementById("log");
+    log.scrollTop = log.scrollHeight;
+    log.isScrollBottom = true;
+
+    document.querySelector('#chat-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (e.target.chat.value) {
+            axios.post('{{workSpaceGroups[0].hostWorkSpaceId}}/chat', {
+                chat: this.chat.value,
+            })
+                .then(() => {
+                    e.target.chat.value = '';
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+
+        log.scrollTop = log.scrollHeight;
+        log.isScrollBottom = true;
+    });
+
+    document.querySelectorAll('.workspace-change-form').forEach((form) => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const watchingWorkSpaceId = document.querySelector('#watchingWorkSpaceId');
+            watchingWorkSpaceId.value = e.target.subWorkSpaceId.value;
+            selected = e.target.subWorkSpaceId.value;
+            //doing something
+            console.log(1);
+            axios.post('{{workSpaceGroups[0].hostWorkSpaceId}}/get/snapshot', {
+                watchingWorkSpaceId: watchingWorkSpaceId.value,
+            })
+                .then(() => {})
+                .catch((err) => {
+                    console.error(err);
+                });
+
+        });
+    });
+</script>
+
+<script>
+    var MSG = {
+        title: "코드",
+        blocks: "블록",
+        linkTooltip: "블록을 저장하고 링크를 가져옵니다.",
+        runTooltip: "작업 공간에서 블록으로 정의된 프로그램을 실행합니다.",
+        badCode: "프로그램 오류:\n%1",
+        timeout: "최대 실행 반복을 초과했습니다.",
+        trashTooltip: "모든 블록을 버립니다.",
+        catLogic: "논리",
+        catLoops: "반복",
+        catMath: "수학",
+        catText: "텍스트",
+        catLists: "목록",
+        catColour: "색",
+        catVariables: "변수",
+        catFunctions: "기능",
+        listVariable: "목록",
+        textVariable: "텍스트",
+        httpRequestError: "요청에 문제가 있습니다.",
+        linkAlert: "다음 링크로 블록을 공유하세요:\n\n%1",
+        hashError: "죄송하지만 '%1'은 어떤 저장된 프로그램으로 일치하지 않습니다.",
+        loadError: "저장된 파일을 불러올 수 없습니다. 혹시 블록리의 다른 버전으로 만들었습니까?",
+        parseError: "%1 구문 분석 오류:\n%2\n\n바뀜을 포기하려면 '확인'을 선택하고 %1을 더 편집하려면 '취소'를 선택하세요."
+    };
+</script>
+
+<script>
+    //category
+    for (var messageKey in MSG) {
+        if (messageKey.indexOf('cat') === 0) {
+            Blockly.Msg[messageKey.toUpperCase()] = MSG[messageKey];
+        }
+    }
+
+    //get toolbox from html
+    var toolboxText = document.getElementById('toolbox').outerHTML;
+    toolboxText = toolboxText.replace(/(^|[^%]){(\w+)}/g, function (m, p1, p2) {
+        return p1 + MSG[p2];
+    });
+    var toolboxXml = Blockly.Xml.textToDom(toolboxText);
+
+    //get user_name
+    var user_name = document.getElementById('user_name').innerText;
+    var user_list = ["user_host", "user_student1", "user_student2", "user_student3"];
+    var other_user = [];
+
+    //add eventlistener at DOMContentLoaded
+    var my_workspace;
+    var other_workspace;
+    var null_workspace;
+    var workspace_xml = {};
+
+    function getURLParams_last(url) {
+        var url_arr = url.split("/");
+        return url_arr[url_arr.length - 1];
+    }
+
+    function getURLParams2_domain(url) {
+        var url_arr = url.split("/");
+        console.log(url_arr[3] + url_arr[4]);
+        return url_arr[4];
+    }
+</script>
+
+<script>
+    var selected = getURLParams_last(document.location.href);
+    var mine = "{{myWorkSpace.id}}" 
+    var savebefore_lock_xml;
+    var lockstatus = false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        if("{{myWorkSpace.id}}" == "{{workSpaceGroups[0].hostWorkSpaceId}}"){
+            document.getElementById("user_name").innerText += " " + "{{myUserNick}}";
+        }
+        else{
+            document.getElementById("user_name").innerText = "student " + mine;
+        }
+        my_workspace = Blockly.inject('content_area',
+            {
+                toolbox: toolboxXml,
+                edia: '../media/',
+            });
+
+        other_workspace = Blockly.inject('content_area1',
+            {
+                toolbox: toolboxXml,
+                media: '../media/',
+            });
+        
+        null_workspace = Blockly.inject('fake_workspace',
+        {
+            toolbox: toolboxXml,
+            media: '../media/',
+        });
+
+        //reserve words(for run's timeout)
+        Blockly.JavaScript.addReservedWords('code,timeouts,checkTimeout');
+
+        //insert listener about my change
+        my_workspace.addChangeListener((event) => {
+            if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE
+                || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE) {
+                var workspace_my_xml = Blockly.Xml.workspaceToDom(my_workspace);
+                console.log("push data!")
+                axios.post(getURLParams2_domain(document.location.href) + "/change/snapshot", {
+                    changeWorkSpaceId: '{{myWorkSpace.id}}',
+                    snapshot: Blockly.Xml.domToText(workspace_my_xml),
+                })
+                    .then(() => {
+                        console.log('성공');
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            }
+            if (event.isUiEvent) {
+                return;
+            }
+        });
+
+        //insert listener about other workspace
+        //axios로 보낼 때 내가 바꿀 수 있는 권한이
+        other_workspace.addChangeListener((event)=>{
+            console.log(event.type);
+            if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE
+                || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE) {
+                console.log(2);
+                var workspace_other_xml = Blockly.Xml.workspaceToDom(other_workspace);
+
+                axios.post(getURLParams2_domain(document.location.href) + "/change/snapshot", {
+                    changeWorkSpaceId: selected,
+                    snapshot: Blockly.Xml.domToText(workspace_other_xml),
+                })
+                    .then(() => {
+                        console.log('성공');
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            }
+            if (event.isUiEvent) {
+                return;
+            }
+        });
+        
+        // 방입장
+        socket.on('join_ex', function (data) {
+            // 채팅 추가
+            const div = document.createElement('div');
+            div.classList.add('system');
+            const chat = document.createElement('div');
+            div.textContent = data.chat;
+            div.appendChild(chat);
+            document.querySelector('#chat-list').appendChild(div);
+
+        });
+        // 새로운 사람 입장
+        socket.on('join_new', function (data) {
+            // 채팅 추가
+            const div = document.createElement('div');
+            div.classList.add('system');
+            const chat = document.createElement('div');
+            div.textContent = data.chat;
+            div.appendChild(chat);
+            document.querySelector('#chat-list').appendChild(div);
+
+            // 멤버 리스트 추가
+            const workspace = document.createElement('div');
+            workspace.classList.add('workspace-group');
+           
+            const subUserId = document.createElement('div');
+            subUserId.classList.add('workspace-group-info');
+            subUserId.textContent = 'User>> ' + data.workspace.subUserNick+"님, 방번호>> "+data.workspace.subWorkSpaceId;
+            subUserId.setAttribute('id', data.workspace.subWorkSpaceId);
+
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = "{{workSpaceGroups[0].hostWorkSpaceId}}/change/watchingWorkSpaceId";
+            form.classList.add('workspace-change-form');
+
+            const input = document.createElement('input');
+            input.setAttribute('type', 'hidden');
+            input.setAttribute('name', 'subWorkSpaceId');
+            input.setAttribute('value', data.workspace.subWorkSpaceId);
+            input.classList.add('subWorkSpaceId');
+
+            const button = document.createElement('button');
+            button.type = 'submit';
+            button.textContent = '선택';
+
+            form.appendChild(input);
+            form.appendChild(button);
+            workspace.appendChild(subUserId);
+            workspace.appendChild(form);
+            document.querySelector('#workspace-group-list').appendChild(workspace);
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const watchingWorkSpaceId = document.querySelector('#watchingWorkSpaceId');
+                watchingWorkSpaceId.value = data.workspace.subWorkSpaceId
+                selected = data.workspace.subWorkSpaceId;
+                axios.post('{{workSpaceGroups[0].hostWorkSpaceId}}/get/snapshot', {
+                    watchingWorkSpaceId: watchingWorkSpaceId.value,
+                })
+                    .then(() => {})
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            })
+        });
+        // 방퇴장
+        socket.on('exit', function (data) {
+            const div = document.createElement('div');
+            div.classList.add('system');
+            const chat = document.createElement('div');
+            div.textContent = data.chat;
+            div.appendChild(chat);
+            document.querySelector('#chat-list').appendChild(div);
+        });
+        // 채팅입력시 받는것
+        socket.on('chat', function (data) {
+            // console.log(socket);
+            const div = document.createElement('div');
+            div.classList.add('user');
+            const name = document.createElement('div');
+            name.textContent = data.nick +": " + data.chat;
+            div.appendChild(name);
+            document.querySelector('#chat-list').appendChild(div);
+        });
+        // 누군가의 workspace에 변화가 있을 때
+        socket.on('changeSnapshot', async function (data) {
+            console.log("getchangesnapshot in here!")
+            var sn = data.id;
+            console.log(sn + "data!");
+            console.log("selected: " + selected);
+            var xml = Blockly.Xml.textToDom(data.snapshot);
+
+            
+            if(sn ==selected && sn == '{{myWorkSpace.id}}'){
+                Blockly.Events.disable();
+                my_workspace.clear();
+                other_workspace.clear();
+                Blockly.Xml.domToWorkspace(xml, my_workspace);
+                Blockly.Xml.domToWorkspace(xml, other_workspace);
+                Blockly.Events.enable();
+            }
+            //내 workspace가 변했을 때
+            else if (sn == '{{myWorkSpace.id}}') {
+                Blockly.Events.disable();
+                my_workspace.clear();
+                Blockly.Xml.domToWorkspace(xml, my_workspace);
+                Blockly.Events.enable();
+            }
+            //내가 보고있는 다른 workspace가 변했을 때
+            else if (sn == selected) {
+                Blockly.Events.disable();
+                other_workspace.clear();
+                Blockly.Xml.domToWorkspace(xml, other_workspace);
+                Blockly.Events.enable();
+            }
+        });
+        // 누군가가 자신이 보는 otherworkspace를 변화시켰을 때 
+        socket.on('getSnapshot', async function(data){
+            // data.workspace.snapshot -> 니가 요청한 workspace의 snapshot 정보
+            // data.workspace -> 니가 요청한 workspace
+            // data.myWorkSpaceId -> 내 id와 비교
+            //after workspace 작업 처리
+            
+            console.log("on getsnapshot")
+            if(data.workspace.snapshot == null){
+                console.log("null");
+                data.workspace.snapshot =Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(null_workspace));
+            }
+
+            console.log('{{myWorkSpace.id}}');
+            console.log(data.myWorkSpaceId);
+
+            if('{{myWorkSpace.id}}' == data.myWorkSpaceId){
+                var xml = Blockly.Xml.textToDom(data.workspace.snapshot);
+                console.log(data.workspace.snapshot);
+                Blockly.Events.disable();
+                other_workspace.clear();
+                Blockly.Xml.domToWorkspace(xml, other_workspace);
+                Blockly.Events.enable();
+            }
+        })
+
+        socket.on('getMySnapshot', async function(data){
+            // data.workspace.snapshot -> 니가 요청한 workspace의 snapshot 정보
+            // data.workspace -> 니가 요청한 workspace
+            // data.myWorkSpaceId -> 내 id와 비교
+            //after workspace 작업 처리
+            
+            console.log("on getMysnapshot")
+            if(data.workspace.snapshot == null){
+                data.workspace.snapshot = Blockly.workspaceToDom(null_workspace);
+            }
+
+            console.log('{{myWorkSpace.id}}');
+            console.log(data.myWorkSpaceId);
+            if('{{myWorkSpace.id}}' == data.myWorkSpaceId){
+                var xml = Blockly.Xml.textToDom(data.workspace.snapshot);
+                console.log(data.workspace.snapshot);
+                Blockly.Events.disable();
+                my_workspace.clear();
+                Blockly.Xml.domToWorkspace(xml, my_workspace);
+                Blockly.Events.enable();
+            }
+        })
+
+        socket.on('freeze',  function(){
+            if('{{hostWorkSpace.id}}' == mine || lockstatus){
+                console.log("not affected");
+            }
+            else{
+                savebefore_lock_xml = Blockly.Xml.workspaceToDom(my_workspace);
+                my_workspace.dispose();
+                my_workspace = Blockly.inject('content_area',
+                {
+                    toolbox: toolboxXml,
+                    media: '../media/',
+                    readOnly: true,
+                });
+                Blockly.Xml.domToWorkspace(savebefore_lock_xml, my_workspace);
+                lockstatus = true;
+            }
+        });
+
+        socket.on('unfreeze',  function(){
+            console.log(!lockstatus);
+            if('{{hostWorkSpace.id}}' == mine || !lockstatus){
+                console.log("not affected");
+            }
+            else{
+                my_workspace.dispose();
+                my_workspace = Blockly.inject('content_area',
+                {
+                    toolbox: toolboxXml,
+                    media: '../media/',
+                });
+                Blockly.Xml.domToWorkspace(savebefore_lock_xml, my_workspace);
+                lockstatus = false;
+
+                //
+                my_workspace.addChangeListener((event) => {
+                    console.log("changed");
+                    if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE
+                        || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE) {
+                        var workspace_my_xml = Blockly.Xml.workspaceToDom(my_workspace);
+                        console.log("push data!")
+                        axios.post(getURLParams2_domain(document.location.href) + "/change/snapshot", {
+                            changeWorkSpaceId: '{{myWorkSpace.id}}',
+                            snapshot: Blockly.Xml.domToText(workspace_my_xml),
+                        })
+                            .then(() => {
+                                console.log('성공');
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                            });
+                    }
+
+                    if (event.isUiEvent) {
+                        return;
+                    }
+                });
+                //
+            }
+        });
+        
+        //수정할 필요 있음. 내것을 받아와야 하는데 저장되어 있는 내것을 백지로 고침
+        axios.post(getURLParams2_domain(document.location.href) + "/get/snapshot/my", {
+            watchingWorkSpaceId: mine,
+    })
+            .then(() => {
+                console.log('성공');
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+
+        axios.post(getURLParams2_domain(document.location.href) + "/get/snapshot", {
+                watchingWorkSpaceId: selected,
+        })
+                .then(() => {
+                    console.log('성공');
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+    }, false);
+
+    //setting workspace to readonly
+    async function workspace_readonly(workspace) {
+        var xmlDom = Blockly.Xml.workspaceToDom(workspace);
+        workspace.dispose();
+        workspace = Blockly.inject('content_area',
+            {
+                toolbox: toolboxXml,
+                media: '../media/',
+                readOnly: true,
+            });
+        Blockly.Xml.domToWorkspace(xmlDom, workspace);
+    }
+
+    async function workspace_canmove(workspace){
+        var xmlDom = Blockly.Xml.workspaceToDom(workspace);
+        workspace.dispose();
+        workspace = Blockly.inject('content_area',
+            {
+                toolbox: toolboxXml,
+                media: '../media/',
+            });
+        Blockly.Xml.domToWorkspace(xmlDom, workspace);
+    }
+
+    function workspace_copy(workspace1, workspace2) {
+        var xmlDom = Blockly.Xml.workspaceToDom(workspace1);
+        workspace2.clear();
+        Blockly.Xml.domToWorkspace(xmlDom, workspace2);
+    }
+
+    function copy_otherToMine(){
+        console.log("<-copy");
+        workspace_copy(other_workspace, my_workspace);
+    }
+
+    function copy_mineToOther(){
+        console.log("copy->");
+        workspace_copy(my_workspace, other_workspace);
+    }
+
+    function lock_workspace(){
+        axios.post('{{workSpaceGroups[0].hostWorkSpaceId}}/freeze');
+    }
+
+    function unlock_workspace(){
+        axios.post('{{workSpaceGroups[0].hostWorkSpaceId}}/unfreeze');
+    }
+
+    function student_tab_handler(clickedName) {
+        selected = clickedName.id;
+        axios.post('{{workSpaceGroups[0].hostWorkSpaceId}}/get/snapshot', {
+            watchingWorkSpaceId: selected,
+        })
+    };
+
+    function bindClick(el, func) {
+        if (typeof el === 'string') {
+            el = document.getElementById(el);
+        }
+        el.addEventListener('click', func, true);
+    };
+
+    function runJs(event) {
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = 'checkTimeout();\n';
+        var timeouts = 0;
+        var checkTimeout = function () {
+            if (timeouts++ > 1000000) {
+                throw MSG['timeout'];
+            }
+        };
+
+        var code = Blockly.JavaScript.workspaceToCode(my_workspace);
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+        try {
+            eval(code);
+        } catch (e) {
+            alert(MSG['badCode'].replace('%1', e));
+        }
+    };
+
+    function discard() {
+        my_workspace.clear();
+    };
+
+    function urlart() {
+        alert(document.location.href);
+    }
+
+    bindClick('trashButton', discard);
+    bindClick('runButton', runJs);
+    bindClick('linkButton', urlart);
+
+    //자동 scroll 추가
+
+</script>
+{% endblock %}
