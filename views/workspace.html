@@ -608,7 +608,6 @@
             div.textContent = data.chat;
             div.appendChild(chat);
             document.querySelector('#chat-list').appendChild(div);
-
         });
         // 새로운 사람 입장
         socket.on('join_new', function (data) {
@@ -669,9 +668,12 @@
             const div = document.createElement('div');
             div.classList.add('system');
             const chat = document.createElement('div');
+
+
             div.textContent = data.chat;
             div.appendChild(chat);
             document.querySelector('#chat-list').appendChild(div);
+            
         });
         // 채팅입력시 받는것
         socket.on('chat', function (data) {

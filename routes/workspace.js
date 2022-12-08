@@ -93,6 +93,7 @@ router.get('/:hostWorkSpaceId', isLoggedIn, async(req, res, next) => {
             req.session.myWorkSpace = myWorkSpace;
             req.app.get('io').to(req.params.hostWorkSpaceId).emit('join_ex', {
                 chat: `${req.user.nick}님 입장`,
+                workspace: myWorkSpace,
             });
         }
         else{

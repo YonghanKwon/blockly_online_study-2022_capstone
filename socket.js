@@ -26,6 +26,7 @@ module.exports = (server, app, sessionMiddleware) => {
             socket.leave(hostWorkSpaceId);
             socket.to(hostWorkSpaceId).emit('exit',{
                 chat: `${req.session.userNick}퇴장!!`,
+                myWorkSpaceId: req.session.myWorkSpaceId,
             });
         });
     });
